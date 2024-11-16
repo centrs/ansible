@@ -3,9 +3,9 @@ services:
     image: postgres:16
     container_name: postgres
     environment:
-      POSTGRES_USER: blabla
+      POSTGRES_USER: cent
       POSTGRES_PASSWORD: Password.1
-      POSTGRES_DB: core
+      POSTGRES_DB: centrs
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
