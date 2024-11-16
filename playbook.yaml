@@ -1,0 +1,55 @@
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install Packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - pipx
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu noble stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Ignore PEP 668. # python bs
+      ansible.builtin.file:
+        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
+        state: absent
+
+    - name: Install python docker module
+      ansible.builtin.pip:
+        name:
+          - docker
+
+    - name: Copy docker compose
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/pg"
+        dest: /home/ubuntu
+
+    - name: Create and start service
+      community.docker.docker_compose_v2:
+        project_src: /home/ubuntu/pg
+        files:
+          - docker-compose.yaml
+      register: output

@@ -1,0 +1,5 @@
+lab:
+  hosts:
+    pi:
+      ansible_host: 192.168.212.3
+      ansible_user: ubuntu
