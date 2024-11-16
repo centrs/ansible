@@ -47,6 +47,11 @@
         src: "{{ playbook_dir }}/pg"
         dest: /home/ubuntu
 
+    - name: Create dir
+      ansible.builtin.file:
+        path: /home/ubuntu/pg/data
+        state: directory
+
     - name: Create and start service
       community.docker.docker_compose_v2:
         project_src: /home/ubuntu/pg
